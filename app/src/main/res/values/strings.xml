@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CRUD</string>
+    <string name="example_name">Carlos</string>
+    <string name="example_birthdate">22/06/1993</string>
 </resources>
