@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.core.Either
+import com.example.core.Failure
 import com.example.crud.R
 import com.example.crud.base.BaseFragment
 import com.example.domain.User
@@ -25,15 +27,26 @@ class UserListFragment : BaseFragment<UserListVM>() {
         rv_users.layoutManager = LinearLayoutManager(context)
 
         initObservers()
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.loadUserList()
     }
 
     private fun initObservers(){
         viewModel.getUserList.observe(this, userListObs)
+        viewModel.getError.observe(this, errorObs)
     }
 
-    private val userListObs = Observer<List<User>> {
-        (rv_users.adapter as UserListAdapter).setData(it)
+    private val userListObs = Observer<List<User>> { newUserList ->
+        (rv_users.adapter as UserListAdapter).setData(newUserList)
+    }
+
+    private val errorObs = Observer<Failure> { failure ->
+        when (failure){
+            is Failure.NetworkConnection -> showNetworkConnectionError()
+            is Failure.ServerError -> showServerError()
+        }
     }
 }

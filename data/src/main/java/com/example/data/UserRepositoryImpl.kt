@@ -4,17 +4,18 @@ import com.example.core.Either
 import com.example.core.Failure
 import com.example.domain.User
 import com.example.domain.UserRepository
-import kotlinx.coroutines.delay
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl(private val userRetrofit: UserRetrofit): UserRepository {
     override suspend fun getUserList(): Either<Failure, List<User>> {
-        delay(1500)
 
-        val userList = mutableListOf<User>()
-        for (i in 0..15){
-            userList.add(User("name$i","birthdate$i", i))
+        return try {
+            val response = userRetrofit.getUserList()
+            when (response.isSuccessful){
+                true -> Either.Right(response.body()!!)
+                false -> Either.Left(Failure.ServerError)
+            }
+        } catch (e: Exception){
+            Either.Left(Failure.ServerError)
         }
-
-        return Either.Right(userList)
     }
 }

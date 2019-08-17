@@ -3,4 +3,6 @@
     <string name="example_name">Carlos</string>
     <string name="example_birthdate">22/06/1993</string>
     <string name="user_list_title">Users</string>
+    <string name="server_error_message">Error de conexión.</string>
+    <string name="network_error_message">Ups! No ha sido posible obtener respuesta del servidor.</string>
 </resources>
