@@ -2,7 +2,9 @@
     <string name="app_name">CRUD</string>
     <string name="example_name">Carlos</string>
     <string name="example_birthdate">22/06/1993</string>
-    <string name="user_list_title">Users</string>
+    <string name="user_list_title">Usuarios</string>
     <string name="server_error_message">Error de conexión.</string>
     <string name="network_error_message">Ups! No ha sido posible obtener respuesta del servidor.</string>
+    <string name="add_new_user">Añadir nuevo usuario…</string>
+    <string name="user_search">Filtrar usuarios</string>
 </resources>

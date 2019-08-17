@@ -27,6 +27,8 @@ class UserListFragment : BaseFragment<UserListVM>() {
         rv_users.layoutManager = LinearLayoutManager(context)
 
         initObservers()
+
+        swipe_to_refresh.setOnRefreshListener { viewModel.loadUserList() }
     }
 
     override fun onResume() {
@@ -40,10 +42,12 @@ class UserListFragment : BaseFragment<UserListVM>() {
     }
 
     private val userListObs = Observer<List<User>> { newUserList ->
+        swipe_to_refresh.isRefreshing = false
         (rv_users.adapter as UserListAdapter).setData(newUserList)
     }
 
     private val errorObs = Observer<Failure> { failure ->
+        swipe_to_refresh.isRefreshing = false
         when (failure){
             is Failure.NetworkConnection -> showNetworkConnectionError()
             is Failure.ServerError -> showServerError()
