@@ -5,9 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crud.R
+import com.example.domain.User
 import kotlinx.android.synthetic.main.user_list_item_lay.view.*
 
-class UserListAdapter(private val users: List<Pair<String, String>>) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+class UserListAdapter : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+
+    private var users = listOf<User>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.user_list_item_lay, parent, false)
@@ -20,12 +23,17 @@ class UserListAdapter(private val users: List<Pair<String, String>>) : RecyclerV
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: Pair<String, String>) {
+        fun bind(user: User) {
             with(itemView){
-                tv_name.text = user.first
-                tv_birthdate.text = user.second
+                tv_name.text = user.name
+                tv_birthdate.text = user.birthdate
             }
         }
+    }
+
+    fun setData(newUsers: List<User>){
+        users = newUsers
+        notifyDataSetChanged()
     }
 
 }

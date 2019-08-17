@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="marginSmall">8dp</dimen>
+    <dimen name="marginMedium">16dp</dimen>
     <dimen name="listPaddingBottom">40dp</dimen>
-
 
 
     <dimen name="font12">12sp</dimen>

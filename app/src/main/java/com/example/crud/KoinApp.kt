@@ -8,6 +8,6 @@ import org.koin.dsl.module.module
 class KoinApp {
 
     val appModule by lazy {
-        module { viewModel { UserListVM(androidApplication()) } }
+        module { viewModel { UserListVM(androidApplication(), get()) } }
     }
 }
