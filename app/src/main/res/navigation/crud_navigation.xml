@@ -9,6 +9,22 @@
     <fragment
         android:id="@+id/user_list_screen"
         android:name="com.example.crud.userList.UserListFragment"
-        tools:layout="@layout/user_list_fragment"/>
+        tools:layout="@layout/user_list_fragment">
+
+        <action
+            android:id="@+id/action_user_list_screen_to_user_detail_screen"
+            app:destination="@id/user_detail_screen"
+            app:enterAnim="@anim/anim_enter_from_left"
+            app:exitAnim="@anim/anim_exit_to_left"
+            app:popEnterAnim="@anim/anim_pop_from_right"
+            app:popExitAnim="@anim/anim_pop_to_right"
+            app:popUpTo="@id/user_list_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/user_detail_screen"
+        android:name="com.example.crud.userDetail.UserDetailFragment"
+        tools:layout="@layout/user_detail"/>
 
 </navigation>

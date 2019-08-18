@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.example.crud.CRUDActivity
 import com.example.crud.R
 import org.koin.androidx.viewmodel.ext.android.viewModelByClass
 import kotlin.reflect.KClass
@@ -20,6 +21,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     abstract fun getLayout(): Int
     abstract fun getViewModel(): KClass<VM>
+    abstract val showToolbar: Boolean
 
     private var progress: AlertDialog? = null
 
@@ -30,6 +32,11 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
             if (showLoading) showLoading()
             else dismissLoading()
         })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as CRUDActivity).showToolbar(showToolbar)
     }
 
     private fun showLoading() {
@@ -44,6 +51,9 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         progress = null
     }
 
+    fun setToolbarTitle(screenTitle: String){
+        (activity as CRUDActivity).setTitle(screenTitle)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(getLayout(), container, false)
@@ -67,4 +77,5 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     fun showServerError(){
         Toast.makeText(context, getString(R.string.server_error_message), Toast.LENGTH_LONG).show()
     }
+
 }

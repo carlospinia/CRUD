@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="marginVerySmall">4dp</dimen>
     <dimen name="marginSmall">8dp</dimen>
     <dimen name="marginMedium">16dp</dimen>
+    <dimen name="marginBig">24dp</dimen>
+    <dimen name="marginVeryBig">32dp</dimen>
     <dimen name="listPaddingBottom">40dp</dimen>
     <dimen name="cornerRadius">8dp</dimen>
 

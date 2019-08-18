@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_lay_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_birthdate_detail"
+        android:layout_marginTop="@dimen/marginMedium"
+        android:layout_marginStart="@dimen/marginMedium"
+        android:layout_marginEnd="@dimen/marginMedium"
+        android:hint="@string/user_name_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_birthdate_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginVeryBig"
+        android:layout_marginStart="@dimen/marginMedium"
+        android:layout_marginEnd="@dimen/marginMedium"
+        android:textSize="@dimen/font18"
+        app:layout_constraintTop_toBottomOf="@id/et_lay_username"
+        android:text="@string/select_birthdate"/>
+
+    <CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_birthdate_detail"
+        android:layout_marginTop="@dimen/marginMedium"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
