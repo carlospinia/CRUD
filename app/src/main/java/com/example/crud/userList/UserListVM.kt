@@ -10,6 +10,7 @@ import com.example.crud.default
 import com.example.crud.toUserApp
 import com.example.domain.User
 import com.example.domain.loadUserList.LoadUserList
+import java.util.*
 
 class UserListVM(application: Application,
                  private val loadUserList: LoadUserList) : BaseViewModel(application) {
@@ -35,5 +36,13 @@ class UserListVM(application: Application,
         val mutableListTemp = mutableListOf<UserApp>()
         for (user in newUserList) { mutableListTemp.add(user.toUserApp()) }
         userList.value = mutableListTemp
+    }
+
+    fun filterUsers(newText: String): List<UserApp> {
+        val text = newText.toLowerCase(Locale.getDefault())
+        return userList.value?.filter { (name, birthdate) ->
+            name?.toLowerCase(Locale.getDefault())?.contains(text) ?: false
+                    || birthdate?.toLowerCase(Locale.getDefault())?.contains(text) ?: false
+        } ?: listOf()
     }
 }
