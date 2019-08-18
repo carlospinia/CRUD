@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.core.Failure
 import com.example.crud.R
+import com.example.crud.UserApp
 import com.example.crud.base.BaseFragment
 import com.example.crud.navigateTo
 import com.example.crud.userDetail.DetailScrenType
@@ -26,7 +27,10 @@ class UserListFragment : BaseFragment<UserListVM>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rv_users.adapter = UserListAdapter()
+        rv_users.adapter = UserListAdapter { user ->
+            navigateTo(R.id.user_detail_screen,
+                UserDetailFragment.setArguments(DetailScrenType.USER_DETAIL, user))
+        }
         rv_users.layoutManager = LinearLayoutManager(context)
 
         setToolbarTitle("")
@@ -54,7 +58,7 @@ class UserListFragment : BaseFragment<UserListVM>() {
         }
     }
 
-    private val userListObs = Observer<List<User>> { newUserList ->
+    private val userListObs = Observer<List<UserApp>> { newUserList ->
         swipe_to_refresh.isRefreshing = false
         (rv_users.adapter as UserListAdapter).setData(newUserList)
     }

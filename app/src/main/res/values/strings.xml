@@ -6,10 +6,20 @@
     <string name="server_error_message">Error de conexión.</string>
     <string name="network_error_message">Ups! No ha sido posible obtener respuesta del servidor.</string>
     <string name="add_new_user">Añadir nuevo usuario…</string>
+    <string name="add_user_button">Añadir usuario</string>
+    <string name="edit_user_button">Editar usuario</string>
+    <string name="cancel_edit_user_button">Cancelar</string>
     <string name="user_search">Filtrar usuarios</string>
     <string name="select_birthdate">Selecciona la fecha de nacimiento:</string>
     <string name="user_detail_toolbar_title">Detalle de usuario</string>
+    <string name="add_user_toolbar_title">Añadir usuario</string>
+    <string name="edit_user_toolbar_title">Editar usuario</string>
     <string name="user_name_hint">Nombre de usuario</string>
     <string name="menu_delete">borrar</string>
     <string name="menu_edit">editar</string>
+    <string name="edit_user_success">Usuario modificado con éxito</string>
+    <string name="delete_user_success">Usuario eliminado con éxito</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete_user_confirm_message">¿Está seguro de que desea borrar este usuario?</string>
 </resources>

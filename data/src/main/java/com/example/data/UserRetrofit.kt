@@ -10,14 +10,14 @@ interface UserRetrofit {
     suspend fun getUserList(): Response<List<User>>
 
     @GET("{id}")
-    suspend fun getUser(@Path("id") id: Int)
+    suspend fun getUser(@Path("id") id: Int): Response<User>
 
-    @POST
-    suspend fun addUser()
+    @POST(".")
+    suspend fun addUser(@Body user: User): Response<Unit>
 
-    @PUT
-    suspend fun editUser()
+    @PUT(".")
+    suspend fun editUser(@Body user: User): Response<Unit>
 
-    @DELETE
-    suspend fun deleteUser()
+    @DELETE("{id}")
+    suspend fun deleteUser(@Path("id") userId: Int): Response<Unit>
 }

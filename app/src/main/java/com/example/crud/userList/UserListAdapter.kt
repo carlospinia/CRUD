@@ -6,15 +6,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crud.R
+import com.example.crud.UserApp
 import com.example.crud.toDateFormatted
-import com.example.domain.User
 import kotlinx.android.synthetic.main.user_list_item_lay.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class UserListAdapter : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+class UserListAdapter (
+    private val userSelected: (UserApp) -> Unit
+): RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
 
-    private var users = listOf<User>()
+    private var users = listOf<UserApp>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.user_list_item_lay, parent, false)
@@ -27,8 +29,10 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: User) {
+        fun bind(user: UserApp) {
             with(itemView){
+                setOnClickListener { userSelected(user) }
+
                 tv_name.text = user.name
 
                 val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm:ss", Locale.getDefault())
@@ -45,7 +49,7 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
         }
     }
 
-    fun setData(newUsers: List<User>){
+    fun setData(newUsers: List<UserApp>){
         users = newUsers
         notifyDataSetChanged()
     }

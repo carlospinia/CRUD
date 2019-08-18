@@ -1,4 +1,4 @@
-package com.example.domain.getUserList
+package com.example.domain.loadUserList
 
 import com.example.core.Either
 import com.example.core.Failure
