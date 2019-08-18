@@ -4,15 +4,16 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.example.core.Failure
-import com.example.crud.R
-import com.example.crud.UserApp
+import com.example.crud.*
 import com.example.crud.base.BaseFragment
-import com.example.crud.timeInMillis
 import kotlinx.android.synthetic.main.user_detail.*
 import kotlin.reflect.KClass
+import java.util.*
+
 
 class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
@@ -20,7 +21,7 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
     override fun getViewModel(): KClass<UserDetailVM> = UserDetailVM::class
     override val showToolbar = true
 
-    private lateinit var user: UserApp
+    private var menu: Menu? = null
 
     companion object {
         private const val SCREEN_TYPE = "SCREEN_TYPE"
@@ -35,30 +36,49 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        when(arguments?.get(SCREEN_TYPE)){
-            DetailScrenType.USER_DETAIL -> {
-                user = arguments?.get(USER) as UserApp
-                setUserDetailUI(user)
-            }
-            DetailScrenType.ADD_USER -> setAddUserUI()
-            else -> setUserDetailUI(null)
-        }
-
         initObservers()
         initListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        when(arguments?.get(SCREEN_TYPE)){
+            DetailScrenType.USER_DETAIL -> {
+                viewModel.user = arguments?.get(USER) as UserApp
+                viewModel.initUndoList()
+                setUserDetailUI(viewModel.user)
+            }
+            DetailScrenType.ADD_USER -> setAddUserUI()
+            else -> setUserDetailUI(null)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.user_detail_menu, menu)
+        this.menu = menu
+        inflater.inflate(R.menu.user_detail_menu, this.menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_delete){
-            showDeleteUserConfirm()
-        } else if (item.itemId == R.id.menu_edit){
-            setEditUserUI()
+        when (item.itemId){
+            R.id.menu_delete -> showDeleteUserConfirm()
+            R.id.menu_edit -> setEditUserUI()
+            R.id.menu_undo -> {
+                viewModel.removeLastUndoItem()
+                et_username.setText(viewModel.getUndoList.value?.last()?.name)
+                val cal = Calendar.getInstance()
+                calendar_view.setDateFromMillis(viewModel.getUndoList.value?.last()?.birthdate?.timeInMillis() ?: 0L)
+            }
         }
         return true
+    }
+
+    private fun hideOptionMenu(@IdRes id: Int){
+        menu?.findItem(id)?.isVisible = false
+    }
+
+    private fun showOptionMenu(@IdRes id: Int){
+        menu?.findItem(id)?.isVisible = true
     }
 
     private fun initObservers(){
@@ -67,6 +87,8 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
         viewModel.getGetUserSuccess.observe(this, getUserSuccessObs)
         viewModel.getDeleteUserSuccess.observe(this, getDeleteSuccessObs)
         viewModel.getError.observe(this, errorObs)
+
+        viewModel.getUndoList.observe(this, undoListObs)
     }
 
     private val createUserSuccessObs = Observer<Boolean>{
@@ -75,11 +97,20 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
     private val editUserSuccessObs = Observer<Boolean> {
         Toast.makeText(context, getString(R.string.edit_user_success), Toast.LENGTH_LONG).show()
-        viewModel.getUser(user.id ?: 0)
+        viewModel.getUser()
     }
 
     private val getUserSuccessObs = Observer<UserApp>{ user ->
-        setUserDetailUI(user)
+        updateUI(user)
+    }
+
+    private fun updateUI(user: UserApp?) {
+        et_username.setText(user?.name)
+        user?.let { u ->
+            u.birthdate?.let { b ->
+                calendar_view.setDateFromMillis(b.timeInMillis())
+            }
+        }
     }
 
     private val getDeleteSuccessObs = Observer<Boolean>{
@@ -94,23 +125,39 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
         }
     }
 
+    private val undoListObs = Observer<MutableList<UserApp>> { undoList ->
+        val itemUndo = menu?.findItem(R.id.menu_undo)
+        itemUndo?.let {
+            it.isEnabled = undoList.size > 1
+            if (it.isEnabled) {
+                it.setIcon(R.drawable.ic_undo)
+            } else {
+                it.setIcon(R.drawable.ic_undo_disabled)
+            }
+        }
+    }
+
     private fun initListeners(){
         btn_add_user.setOnClickListener {
-            viewModel.createUser(et_username.text.toString(), calendar_view.date)
+            viewModel.createUser(et_username.text.toString(), calendar_view.getDateInMillis())
         }
 
         btn_cancel_edit_user.setOnClickListener {
-            setUserDetailUI(user)
+            setUserDetailUI(viewModel.user)
         }
 
         btn_edit_user.setOnClickListener{
-            viewModel.editUser(et_username.text.toString(), calendar_view.date, user.id ?: 0)
+            viewModel.editUser(et_username.text.toString(), calendar_view.getDateInMillis())
         }
     }
 
     private fun setAddUserUI(){
         setToolbarTitle( getString(R.string.add_user_toolbar_title))
         setHasOptionsMenu(false)
+        hideOptionMenu(R.id.menu_undo)
+        hideOptionMenu(R.id.menu_delete)
+        hideOptionMenu(R.id.menu_edit)
+
         overlap_calendar.visibility = View.GONE
         btn_add_user.visibility = View.VISIBLE
         btn_edit_user.visibility = View.GONE
@@ -119,7 +166,13 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
     private fun setUserDetailUI(user: UserApp?){
         setToolbarTitle( getString(R.string.user_detail_toolbar_title))
+
         setHasOptionsMenu(true)
+        hideOptionMenu(R.id.menu_undo)
+        showOptionMenu(R.id.menu_delete)
+        showOptionMenu(R.id.menu_edit)
+
+
         btn_add_user.visibility = View.GONE
 
         et_username.apply {
@@ -134,18 +187,25 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
         user?.let { u ->
             u.birthdate?.let { b ->
-                calendar_view.date = b.timeInMillis()
+                calendar_view.setDateFromMillis(b.timeInMillis())
             }
         }
     }
 
     private fun setEditUserUI(){
-        setHasOptionsMenu(false)
+        setHasOptionsMenu(true)
+        showOptionMenu(R.id.menu_undo)
+        hideOptionMenu(R.id.menu_delete)
+        hideOptionMenu(R.id.menu_edit)
+
         setToolbarTitle( getString(R.string.edit_user_toolbar_title))
+
         overlap_calendar.visibility = View.GONE
+
         btn_add_user.visibility = View.GONE
         btn_edit_user.visibility = View.VISIBLE
         btn_cancel_edit_user.visibility = View.VISIBLE
+
         et_username.apply {
             isEnabled = true
         }
@@ -154,7 +214,7 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
     private fun showDeleteUserConfirm(){
         val dialog = AlertDialog.Builder(context)
         dialog.setPositiveButton(getString(R.string.accept)){ d, _ ->
-            viewModel.deleteUser(user.id ?: 0)
+            viewModel.deleteUser()
             d.dismiss()
         }.setNegativeButton(getString(R.string.cancel)){ d, _ ->
                 d.dismiss()

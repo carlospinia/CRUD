@@ -7,7 +7,7 @@
     <string name="network_error_message">Ups! No ha sido posible obtener respuesta del servidor…</string>
     <string name="add_new_user">Añadir nuevo usuario…</string>
     <string name="add_user_button">Añadir usuario</string>
-    <string name="edit_user_button">Editar usuario</string>
+    <string name="edit_user_button">Guardar</string>
     <string name="cancel_edit_user_button">Cancelar</string>
     <string name="user_search">Filtrar usuarios</string>
     <string name="select_birthdate">Selecciona la fecha de nacimiento:</string>
@@ -17,6 +17,7 @@
     <string name="user_name_hint">Nombre de usuario</string>
     <string name="menu_delete">borrar</string>
     <string name="menu_edit">editar</string>
+    <string name="menu_undo">deshacer</string>
     <string name="edit_user_success">Usuario modificado con éxito</string>
     <string name="delete_user_success">Usuario eliminado con éxito</string>
     <string name="accept">Aceptar</string>

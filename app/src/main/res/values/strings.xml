@@ -7,7 +7,7 @@
     <string name="network_error_message">Ups! Unable to get server response…</string>
     <string name="add_new_user">Add new user…</string>
     <string name="add_user_button">Add user</string>
-    <string name="edit_user_button">Edit user</string>
+    <string name="edit_user_button">Save</string>
     <string name="cancel_edit_user_button">Cancel</string>
     <string name="user_search">Filter users</string>
     <string name="select_birthdate">Select birthdate:</string>
@@ -17,6 +17,7 @@
     <string name="user_name_hint">Username</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_edit">Edit</string>
+    <string name="menu_undo">Undo</string>
     <string name="edit_user_success">User successfully modified</string>
     <string name="delete_user_success">User successfully deleted</string>
     <string name="accept">Accept</string>

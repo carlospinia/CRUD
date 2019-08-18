@@ -4,10 +4,8 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.core.Failure
-import com.example.crud.UserApp
+import com.example.crud.*
 import com.example.crud.base.BaseViewModel
-import com.example.crud.toDateRequest
-import com.example.crud.toUserApp
 import com.example.domain.User
 import com.example.domain.createUser.CreateUser
 import com.example.domain.deleteUser.DeleteUser
@@ -36,6 +34,11 @@ class UserDetailVM(application: Application,
     private val error = MutableLiveData<Failure>()
     val getError : LiveData<Failure> = error
 
+    lateinit var user: UserApp
+
+    private val undoList = MutableLiveData<MutableList<UserApp>>().default(mutableListOf())
+    val getUndoList: LiveData<MutableList<UserApp>> = undoList
+
     fun createUser(userName: String, birthDate: Long) {
         loading.value = true
         createUser(User(userName, birthDate.toDateRequest(), null)) { it.fold(::handleCreateUserFailure, ::handleCreateUserSuccess)}
@@ -51,9 +54,12 @@ class UserDetailVM(application: Application,
         createUserSuccess.value = true
     }
 
-    fun editUser(userName: String, birthDate: Long, userId: Int) {
+    fun editUser(userName: String, birthDate: Long) {
         loading.value = true
-        editUser(User(userName, birthDate.toDateRequest(), userId)){ it.fold(::handleEditUserFailure, ::handleEditUserSuccess)}
+        user = UserApp(userName, birthDate.toDateRequest(), user.id ?: 0)
+        undoList.value?.add(user)
+        undoList.value = undoList.value
+        editUser(user.toUser()){ it.fold(::handleEditUserFailure, ::handleEditUserSuccess)}
     }
 
     private fun handleEditUserSuccess(unit: Unit){
@@ -66,9 +72,9 @@ class UserDetailVM(application: Application,
         error.value = failure
     }
 
-    fun getUser(userId: Int) {
+    fun getUser() {
         loading.value = true
-        getUser(userId) { it.fold(::handleGetUserFailure, ::handleGetUserSuccess) }
+        getUser(user.id ?: 0) { it.fold(::handleGetUserFailure, ::handleGetUserSuccess) }
     }
 
     private fun handleGetUserSuccess(user: User){
@@ -81,9 +87,9 @@ class UserDetailVM(application: Application,
         error.value = failure
     }
 
-    fun deleteUser(userId: Int) {
+    fun deleteUser() {
         loading.value = true
-        deleteUser(userId) { it.fold(::handleDeleteUserFailure, ::handleDeleteUserSuccess) }
+        deleteUser(user.id ?: 0) { it.fold(::handleDeleteUserFailure, ::handleDeleteUserSuccess) }
     }
 
     private fun handleDeleteUserSuccess(unit: Unit){
@@ -94,5 +100,18 @@ class UserDetailVM(application: Application,
     private fun handleDeleteUserFailure(failure: Failure){
         loading.value = false
         error.value = failure
+    }
+
+    fun initUndoList() {
+        undoList.value?.add(user)
+    }
+
+    fun removeLastUndoItem() {
+        undoList.value?.let{
+            if (it.isNotEmpty()) {
+                undoList.value?.removeAt(it.lastIndex)
+                undoList.value = undoList.value
+            }
+        }
     }
 }

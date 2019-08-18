@@ -1,6 +1,7 @@
 package com.example.crud
 
 import android.os.Bundle
+import android.widget.DatePicker
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +32,18 @@ fun Long.toDateRequest(): String {
     cal.timeInMillis = this
     val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     return inSdf.format(cal.time)
+}
+
+fun DatePicker.setDateFromMillis(timeMillis: Long){
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = timeMillis
+    this.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+}
+
+fun DatePicker.getDateInMillis(): Long {
+    val calendar = Calendar.getInstance()
+    calendar.set(this.year, this.month, this.dayOfMonth)
+    return calendar.timeInMillis
 }
 
 fun Fragment.navigateTo(@IdRes navActionResId: Int, bundle: Bundle, popUpTo: Int? = null, inclusive: Boolean = false) {
