@@ -1,6 +1,7 @@
 package com.example.crud.userDetail
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -11,9 +12,8 @@ import com.example.core.Failure
 import com.example.crud.*
 import com.example.crud.base.BaseFragment
 import kotlinx.android.synthetic.main.user_detail.*
-import kotlin.reflect.KClass
 import java.util.*
-
+import kotlin.reflect.KClass
 
 class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
@@ -66,8 +66,7 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
             R.id.menu_undo -> {
                 viewModel.removeLastUndoItem()
                 et_username.setText(viewModel.getUndoList.value?.last()?.name)
-                val cal = Calendar.getInstance()
-                calendar_view.setDateFromMillis(viewModel.getUndoList.value?.last()?.birthdate?.timeInMillis() ?: 0L)
+                et_birthdate.setText(viewModel.getUndoList.value?.last()?.birthdate?.datePrettyFormat())
             }
         }
         return true
@@ -101,16 +100,8 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
     }
 
     private val getUserSuccessObs = Observer<UserApp>{ user ->
-        updateUI(user)
-    }
-
-    private fun updateUI(user: UserApp?) {
         et_username.setText(user?.name)
-        user?.let { u ->
-            u.birthdate?.let { b ->
-                calendar_view.setDateFromMillis(b.timeInMillis())
-            }
-        }
+        et_birthdate.setText(user?.birthdate?.datePrettyFormat())
     }
 
     private val getDeleteSuccessObs = Observer<Boolean>{
@@ -139,7 +130,7 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
     private fun initListeners(){
         btn_add_user.setOnClickListener {
-            viewModel.createUser(et_username.text.toString(), calendar_view.getDateInMillis())
+            viewModel.createUser(et_username.text.toString(), et_birthdate.text.toString())
         }
 
         btn_cancel_edit_user.setOnClickListener {
@@ -147,7 +138,26 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
         }
 
         btn_edit_user.setOnClickListener{
-            viewModel.editUser(et_username.text.toString(), calendar_view.getDateInMillis())
+            viewModel.editUser(et_username.text.toString(), et_birthdate.text.toString())
+        }
+
+        et_birthdate.setOnClickListener {
+            if (et_birthdate.text.isNullOrEmpty()){
+                showDatePicker()
+            } else {
+                showDatePicker(et_birthdate.text.toString().timeInMillisFromPretty())
+            }
+        }
+    }
+
+    private fun showDatePicker(timeInMillisFromPretty: Long = Calendar.getInstance().timeInMillis) {
+        context?.let{
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = timeInMillisFromPretty
+            val dialog = DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, _, _, _ ->
+                et_birthdate.setText(view.getDateInMillis().toDatePretty())
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+            dialog.show()
         }
     }
 
@@ -158,7 +168,9 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
         hideOptionMenu(R.id.menu_delete)
         hideOptionMenu(R.id.menu_edit)
 
-        overlap_calendar.visibility = View.GONE
+        et_username.isEnabled = true
+        et_birthdate.isEnabled = true
+
         btn_add_user.visibility = View.VISIBLE
         btn_edit_user.visibility = View.GONE
         btn_cancel_edit_user.visibility = View.GONE
@@ -172,7 +184,6 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
         showOptionMenu(R.id.menu_delete)
         showOptionMenu(R.id.menu_edit)
 
-
         btn_add_user.visibility = View.GONE
 
         et_username.apply {
@@ -180,16 +191,14 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
             setText(user?.name.toString())
         }
 
-        overlap_calendar.visibility = View.VISIBLE
+        et_birthdate.apply {
+            isEnabled = false
+            setText(user?.birthdate.toString().datePrettyFormat())
+        }
+
         btn_add_user.visibility = View.GONE
         btn_edit_user.visibility = View.GONE
         btn_cancel_edit_user.visibility = View.GONE
-
-        user?.let { u ->
-            u.birthdate?.let { b ->
-                calendar_view.setDateFromMillis(b.timeInMillis())
-            }
-        }
     }
 
     private fun setEditUserUI(){
@@ -200,15 +209,12 @@ class UserDetailFragment : BaseFragment<UserDetailVM>() {
 
         setToolbarTitle( getString(R.string.edit_user_toolbar_title))
 
-        overlap_calendar.visibility = View.GONE
+        et_username.isEnabled = true
+        et_birthdate.isEnabled = true
 
         btn_add_user.visibility = View.GONE
         btn_edit_user.visibility = View.VISIBLE
         btn_cancel_edit_user.visibility = View.VISIBLE
-
-        et_username.apply {
-            isEnabled = true
-        }
     }
 
     private fun showDeleteUserConfirm(){

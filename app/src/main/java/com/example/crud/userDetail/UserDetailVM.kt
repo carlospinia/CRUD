@@ -39,9 +39,9 @@ class UserDetailVM(application: Application,
     private val undoList = MutableLiveData<MutableList<UserApp>>().default(mutableListOf())
     val getUndoList: LiveData<MutableList<UserApp>> = undoList
 
-    fun createUser(userName: String, birthDate: Long) {
+    fun createUser(userName: String, birthDate: String) {
         loading.value = true
-        createUser(User(userName, birthDate.toDateRequest(), null)) { it.fold(::handleCreateUserFailure, ::handleCreateUserSuccess)}
+        createUser(User(userName, birthDate.dateToRequestFormat(), null)) { it.fold(::handleCreateUserFailure, ::handleCreateUserSuccess)}
     }
 
     private fun handleCreateUserFailure(failure: Failure){
@@ -54,9 +54,9 @@ class UserDetailVM(application: Application,
         createUserSuccess.value = true
     }
 
-    fun editUser(userName: String, birthDate: Long) {
+    fun editUser(userName: String, birthDate: String) {
         loading.value = true
-        user = UserApp(userName, birthDate.toDateRequest(), user.id ?: 0)
+        user = UserApp(userName, birthDate.dateToRequestFormat(), user.id ?: 0)
         undoList.value?.add(user)
         undoList.value = undoList.value
         editUser(user.toUser()){ it.fold(::handleEditUserFailure, ::handleEditUserSuccess)}

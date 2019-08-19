@@ -6,130 +6,95 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true">
 
-    <androidx.core.widget.NestedScrollView
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_lay_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:paddingBottom="@dimen/marginVeryBig">
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginStart="@dimen/marginMedium"
+        android:layout_marginEnd="@dimen/marginMedium"
+        android:hint="@string/user_name_hint">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_lay_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_birthdate_detail"
-                android:layout_marginTop="@dimen/marginSmall"
-                android:layout_marginStart="@dimen/marginMedium"
-                android:layout_marginEnd="@dimen/marginMedium"
-                android:hint="@string/user_name_hint">
+    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:imeOptions="actionDone"
-                    android:inputType="textNoSuggestions"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_birthdate_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/marginMedium"
-                android:layout_marginStart="@dimen/marginMedium"
-                android:layout_marginEnd="@dimen/marginMedium"
-                android:textSize="@dimen/font18"
-                app:layout_constraintTop_toBottomOf="@id/et_lay_username"
-                android:text="@string/select_birthdate"/>
-
-            <DatePicker
-                android:id="@+id/calendar_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_birthdate_detail"
-                android:layout_marginTop="@dimen/marginSmall"
-                android:nestedScrollingEnabled="false"/>
-
-            <View
-                android:id="@+id/overlap_calendar"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="@id/calendar_view"
-                app:layout_constraintEnd_toEndOf="@id/calendar_view"
-                app:layout_constraintTop_toTopOf="@id/calendar_view"
-                app:layout_constraintBottom_toBottomOf="@id/calendar_view"
-                android:clickable="true"
-                android:focusable="true"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_lay_birthdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingTop="@dimen/marginMedium"
-        android:background="@color/colorWhite">
+        app:layout_constraintTop_toBottomOf="@id/et_lay_username"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginStart="@dimen/marginMedium"
+        android:layout_marginEnd="@dimen/marginMedium"
+        android:hint="@string/select_birthdate">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_add_user"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_birthdate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/button_shape"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:text="@string/add_user_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/marginSmall"
-            android:layout_marginStart="@dimen/marginVeryBig"
-            android:layout_marginEnd="@dimen/marginVeryBig"
-            android:layout_marginBottom="@dimen/marginMedium"
-            android:visibility="visible"/>
+            android:layout_height="match_parent"
+            android:imeOptions="actionDone"
+            android:inputType="date"
+            android:focusable="false"
+            android:clickable="true"
+            android:maxLines="1"/>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_cancel_edit_user"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:textStyle="bold"
-            android:textColor="@color/colorRed"
-            android:text="@string/cancel_edit_user_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_edit_user"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/marginSmall"
-            android:layout_marginStart="@dimen/marginVeryBig"
-            android:layout_marginEnd="@dimen/marginMedium"
-            android:layout_marginBottom="@dimen/marginMedium"
-            android:visibility="gone"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_edit_user"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/button_shape"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:text="@string/edit_user_button"
-            app:layout_constraintStart_toEndOf="@id/btn_cancel_edit_user"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/marginSmall"
-            android:layout_marginEnd="@dimen/marginVeryBig"
-            android:layout_marginBottom="@dimen/marginMedium"
-            android:visibility="gone"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_add_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:text="@string/add_user_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginStart="@dimen/marginVeryBig"
+        android:layout_marginEnd="@dimen/marginVeryBig"
+        android:layout_marginBottom="@dimen/marginMedium"
+        android:visibility="visible"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cancel_edit_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:textStyle="bold"
+        android:textColor="@color/colorRed"
+        android:text="@string/cancel_edit_user_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_edit_user"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginStart="@dimen/marginVeryBig"
+        android:layout_marginEnd="@dimen/marginMedium"
+        android:layout_marginBottom="@dimen/marginMedium"
+        android:visibility="gone"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_edit_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:background="@drawable/button_shape"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:text="@string/edit_user_button"
+        app:layout_constraintStart_toEndOf="@id/btn_cancel_edit_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/marginSmall"
+        android:layout_marginEnd="@dimen/marginVeryBig"
+        android:layout_marginBottom="@dimen/marginMedium"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

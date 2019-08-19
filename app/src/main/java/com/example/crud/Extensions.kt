@@ -13,16 +13,32 @@ import com.example.domain.User
 
 fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
-fun String.toDateFormatted(format: SimpleDateFormat): String {
+fun String.datePrettyFormat(): String {
     val cal = Calendar.getInstance()
+    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     cal.time = inSdf.parse(this)
     return format.format(cal.time)
 }
 
-fun String.timeInMillis(): Long {
+fun String.dateToRequestFormat(): String{
+    val cal = Calendar.getInstance()
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    cal.time = sdf.parse(this)
+    return inSdf.format(cal.time)
+}
+
+fun String.timeInMillisFromRequestDate(): Long {
     val cal = Calendar.getInstance()
     val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    cal.time = inSdf.parse(this)
+    return cal.timeInMillis
+}
+
+fun String.timeInMillisFromPretty(): Long {
+    val cal = Calendar.getInstance()
+    val inSdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     cal.time = inSdf.parse(this)
     return cal.timeInMillis
 }
@@ -31,6 +47,13 @@ fun Long.toDateRequest(): String {
     val cal = Calendar.getInstance()
     cal.timeInMillis = this
     val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    return inSdf.format(cal.time)
+}
+
+fun Long.toDatePretty(): String {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = this
+    val inSdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return inSdf.format(cal.time)
 }
 

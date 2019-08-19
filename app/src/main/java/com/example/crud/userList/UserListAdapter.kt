@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crud.R
 import com.example.crud.UserApp
-import com.example.crud.toDateFormatted
+import com.example.crud.datePrettyFormat
 import kotlinx.android.synthetic.main.user_list_item_lay.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,8 +35,7 @@ class UserListAdapter (
 
                 tv_name.text = user.name
 
-                val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm:ss", Locale.getDefault())
-                tv_birthdate.text = user.birthdate?.toDateFormatted(sdf)
+                tv_birthdate.text = user.birthdate?.datePrettyFormat()
 
                 when (user.id?.rem(10)){
                     0, 5 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_green)) }
