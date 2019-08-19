@@ -11,12 +11,11 @@ import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 class UserTest {
 
-    private val userRepository: UserRepository = Mockito.mock(UserRepository::class.java)
+    private val userRepository: UserRepository = mock()
 
     private val createUser = CreateUser(userRepository)
     private val deleteUser = DeleteUser(userRepository)
