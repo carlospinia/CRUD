@@ -1,7 +1,6 @@
 package com.example.domain
 
 import com.example.core.Either
-import com.example.core.Failure
 import com.example.domain.createUser.CreateUser
 import com.example.domain.deleteUser.DeleteUser
 import com.example.domain.editUser.EditUser

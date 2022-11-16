@@ -1,8 +1,12 @@
 package com.example.crud
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavOptions
@@ -21,13 +25,16 @@ fun String.datePrettyFormat(): String {
     return format.format(cal.time)
 }
 
-fun String.dateToRequestFormat(): String{
-    val cal = Calendar.getInstance()
-    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    cal.time = sdf.parse(this)
-    return inSdf.format(cal.time)
-}
+fun String.dateToRequestFormat(): String? =
+    try {
+        val cal = Calendar.getInstance()
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val inSdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        cal.time = sdf.parse(this)!!
+        inSdf.format(cal.time)
+    } catch (e: Exception){
+        null
+    }
 
 fun String.timeInMillisFromRequestDate(): Long {
     val cal = Calendar.getInstance()
@@ -87,6 +94,14 @@ fun Fragment.navigateTo(@IdRes navActionResId: Int, bundle: Bundle, popUpTo: Int
     } catch (ignored: Exception) {
         // Navigation library has a bug which crash if same navActionResId is passed too quickly so we implemented this try / catch
     }
+}
+
+fun Fragment.showNetworkConnectionError(){
+    Toast.makeText(context, getString(R.string.network_error_message), Toast.LENGTH_LONG).show()
+}
+
+fun Fragment.showServerError(){
+    Toast.makeText(context, getString(R.string.server_error_message), Toast.LENGTH_LONG).show()
 }
 
 fun User.toUserApp() = UserApp(this.name, this.birthdate, this.id)

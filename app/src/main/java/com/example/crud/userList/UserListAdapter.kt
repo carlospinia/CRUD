@@ -1,25 +1,27 @@
 package com.example.crud.userList
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crud.R
 import com.example.crud.UserApp
+import com.example.crud.databinding.UserListItemLayBinding
 import com.example.crud.datePrettyFormat
-import kotlinx.android.synthetic.main.user_list_item_lay.view.*
-import java.text.SimpleDateFormat
-import java.util.*
 
-class UserListAdapter (
+class UserListAdapter(
     private val userSelected: (UserApp) -> Unit
-): RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
 
     private var users = listOf<UserApp>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.user_list_item_lay, parent, false)
+        UserListItemLayBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
     )
 
     override fun getItemCount() = users.size
@@ -28,27 +30,33 @@ class UserListAdapter (
         holder.bind(users[position])
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(user: UserApp) {
-            with(itemView){
-                setOnClickListener { userSelected(user) }
+    inner class ViewHolder(
+        private val itemBinding: UserListItemLayBinding
+    ) : RecyclerView.ViewHolder(itemBinding.root) {
 
-                tv_name.text = user.name
+        fun bind(user: UserApp) = with(itemBinding) {
+            root.setOnClickListener { userSelected(user) }
 
-                tv_birthdate.text = user.birthdate?.datePrettyFormat()
+            tvName.text = user.name
 
-                when (user.id?.rem(10)){
-                    0, 5 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_green)) }
-                    1, 6 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_yellow)) }
-                    2, 7 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_blue)) }
-                    3, 8 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_orange)) }
-                    4, 9 -> { iv_user.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_face_purple)) }
-                }
+            tvBirthdate.text = user.birthdate?.datePrettyFormat()
+
+            when (user.id?.rem(10)) {
+                0, 5 -> ivUser.setAvatar(R.drawable.ic_face_green)
+                1, 6 -> ivUser.setAvatar(R.drawable.ic_face_yellow)
+                2, 7 -> ivUser.setAvatar(R.drawable.ic_face_blue)
+                3, 8 -> ivUser.setAvatar(R.drawable.ic_face_orange)
+                else -> ivUser.setAvatar(R.drawable.ic_face_purple)
             }
+        }
+
+        private fun AppCompatImageView.setAvatar(@DrawableRes avatar: Int) {
+            setImageDrawable(ContextCompat.getDrawable(context, avatar))
         }
     }
 
-    fun setData(newUsers: List<UserApp>){
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(newUsers: List<UserApp>) {
         users = newUsers
         notifyDataSetChanged()
     }

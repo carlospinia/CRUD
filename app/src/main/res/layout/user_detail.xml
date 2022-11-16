@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true">
 
+    <include android:id="@+id/toolbar_detail" layout="@layout/user_detail_toolbar"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_lay_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
         android:layout_marginTop="@dimen/marginSmall"
         android:layout_marginStart="@dimen/marginMedium"
         android:layout_marginEnd="@dimen/marginMedium"
@@ -43,25 +46,10 @@
             android:inputType="date"
             android:focusable="false"
             android:clickable="true"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            tools:ignore="KeyboardInaccessibleWidget" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:background="@drawable/button_shape"
-        android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:text="@string/add_user_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/marginSmall"
-        android:layout_marginStart="@dimen/marginVeryBig"
-        android:layout_marginEnd="@dimen/marginVeryBig"
-        android:layout_marginBottom="@dimen/marginMedium"
-        android:visibility="visible"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cancel_edit_user"
@@ -72,28 +60,11 @@
         android:textColor="@color/colorRed"
         android:text="@string/cancel_edit_user_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_edit_user"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_lay_birthdate"
         android:layout_marginTop="@dimen/marginSmall"
         android:layout_marginStart="@dimen/marginVeryBig"
         android:layout_marginEnd="@dimen/marginMedium"
-        android:layout_marginBottom="@dimen/marginMedium"
-        android:visibility="gone"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_edit_user"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:background="@drawable/button_shape"
-        android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:text="@string/edit_user_button"
-        app:layout_constraintStart_toEndOf="@id/btn_cancel_edit_user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/marginSmall"
-        android:layout_marginEnd="@dimen/marginVeryBig"
         android:layout_marginBottom="@dimen/marginMedium"
         android:visibility="gone"/>
 

@@ -23,4 +23,7 @@
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
     <string name="delete_user_confirm_message">Are you sure you want to delete this user?</string>
+    <string name="save_button">Save button</string>
+    <string name="invalid_date_format">Invalid date format</string>
+
 </resources>

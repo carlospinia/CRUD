@@ -6,18 +6,18 @@ import retrofit2.http.*
 
 interface UserRetrofit {
 
-    @GET(".")
+    @GET("api/User/")
     suspend fun getUserList(): Response<List<User>>
 
-    @GET("{id}")
+    @GET("api/User/{id}")
     suspend fun getUser(@Path("id") id: Int): Response<User>
 
-    @POST(".")
+    @POST("api/User/")
     suspend fun addUser(@Body user: User): Response<Unit>
 
-    @PUT(".")
+    @PUT("api/User/")
     suspend fun editUser(@Body user: User): Response<Unit>
 
-    @DELETE("{id}")
+    @DELETE("api/User/{id}")
     suspend fun deleteUser(@Path("id") userId: Int): Response<Unit>
 }

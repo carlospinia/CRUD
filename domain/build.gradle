@@ -1,19 +1,20 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation project (':core')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.koin:koin-android:${versions.koin}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
 
-    testImplementation "org.mockito:mockito-core:${versions.mockito}"
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.mockitoKotlin}"
-    testImplementation "junit:junit:${versions.junit4}"
+    testImplementation "junit:junit:$junit4"
 }
 
-repositories {
-    mavenCentral()
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

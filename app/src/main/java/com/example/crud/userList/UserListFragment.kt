@@ -1,44 +1,58 @@
 package com.example.crud.userList
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.core.Failure
-import com.example.crud.R
-import com.example.crud.UserApp
-import com.example.crud.base.BaseFragment
-import com.example.crud.navigateTo
+import com.example.crud.*
+import com.example.crud.databinding.UserListFragmentBinding
 import com.example.crud.userDetail.DetailScrenType
 import com.example.crud.userDetail.UserDetailFragment
-import kotlinx.android.synthetic.main.user_list_fragment.*
+import com.example.domain.UserListFailure
+import dagger.hilt.android.AndroidEntryPoint
 
-class UserListFragment : BaseFragment<UserListVM>() {
+@AndroidEntryPoint
+class UserListFragment : Fragment() {
 
-    override fun getLayout() = R.layout.user_list_fragment
-    override fun getViewModel() = UserListVM::class
-    override val showToolbar = false
+    private var _binding: UserListFragmentBinding? = null
 
-    companion object {
-        fun setArguments() = bundleOf()
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    private val viewModel: UserListVM by viewModels()
+
+    private var loading: Boolean by LoadingDelegate()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = UserListFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rv_users.adapter = UserListAdapter { user ->
-            navigateTo(R.id.user_detail_screen,
-                UserDetailFragment.setArguments(DetailScrenType.USER_DETAIL, user))
-        }
-        rv_users.layoutManager = LinearLayoutManager(context)
 
-        setToolbarTitle("")
+        binding.rvUsers.adapter = UserListAdapter { user ->
+            navigateTo(
+                R.id.user_detail_screen,
+                UserDetailFragment.setArguments(DetailScrenType.UserDetail(user))
+            )
+        }
+        binding.rvUsers.layoutManager = LinearLayoutManager(context)
 
         initObservers()
         initListeners()
 
-        swipe_to_refresh.setOnRefreshListener { viewModel.loadUserList() }
+        binding.swipeToRefresh.setOnRefreshListener { viewModel.loadUserList() }
     }
 
     override fun onResume() {
@@ -46,37 +60,46 @@ class UserListFragment : BaseFragment<UserListVM>() {
         viewModel.loadUserList()
     }
 
-    private fun initObservers(){
-        viewModel.getUserList.observe(this, userListObs)
-        viewModel.getError.observe(this, errorObs)
+    private fun initObservers() {
+        viewModel.loading.observe(viewLifecycleOwner, loadingObs)
+        viewModel.getUserList.observe(viewLifecycleOwner, userListObs)
+        viewModel.getError.observe(viewLifecycleOwner, errorObs)
     }
 
-    private fun initListeners() {
-        fab_add.setOnClickListener {
-            navigateTo(R.id.action_user_list_screen_to_user_detail_screen,
-                UserDetailFragment.setArguments(DetailScrenType.ADD_USER))
+    private fun initListeners() = with(binding) {
+        fabAdd.setOnClickListener {
+            navigateTo(
+                R.id.action_user_list_screen_to_user_detail_screen,
+                UserDetailFragment.setArguments(DetailScrenType.AddUser)
+            )
         }
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean { return true }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                (rv_users.adapter as UserListAdapter).setData(viewModel.filterUsers(newText ?: ""))
+                (rvUsers.adapter as UserListAdapter).setData(viewModel.filterUsers(newText ?: ""))
                 return true
             }
         })
     }
 
     private val userListObs = Observer<List<UserApp>> { newUserList ->
-        swipe_to_refresh.isRefreshing = false
-        (rv_users.adapter as UserListAdapter).setData(newUserList)
+        binding.swipeToRefresh.isRefreshing = false
+        (binding.rvUsers.adapter as UserListAdapter).setData(newUserList)
     }
 
-    private val errorObs = Observer<Failure> { failure ->
-        swipe_to_refresh.isRefreshing = false
-        when (failure){
-            is Failure.NetworkConnection -> showNetworkConnectionError()
-            is Failure.ServerError -> showServerError()
+    private val errorObs = Observer<UserListFailure> { failure ->
+        binding.swipeToRefresh.isRefreshing = false
+        when (failure) {
+            is UserListFailure.NetworkConnection -> showNetworkConnectionError()
+            is UserListFailure.ServerError -> showServerError()
         }
+    }
+
+    private val loadingObs = Observer<Boolean> { showLoading ->
+        loading = showLoading
     }
 }

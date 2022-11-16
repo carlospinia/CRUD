@@ -23,4 +23,6 @@
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="delete_user_confirm_message">¿Está seguro de que desea borrar este usuario?</string>
+    <string name="invalid_date_format">Formato de fecha incorrecto</string>
+    <string name="save_button">Guardar</string>
 </resources>

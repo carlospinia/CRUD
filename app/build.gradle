@@ -1,14 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
-    compileSdkVersion versions['compileSdk']
+    compileSdkVersion rootProject.ext.compileSdk
     defaultConfig {
         applicationId "com.example.crud"
-        minSdkVersion versions['minSdk']
-        targetSdkVersion versions['targetSdk']
-        versionCode versions['versionCode']
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode rootProject.ext.versionCode
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -19,9 +21,19 @@ android {
         }
     }
 
-    androidExtensions {
-        experimental = true
+    buildFeatures {
+        viewBinding true
     }
+    namespace 'com.example.crud'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -31,14 +43,14 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
-    implementation "androidx.core:core-ktx:${versions.corektx}"
-    implementation "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
-    implementation "org.koin:koin-androidx-viewmodel:${versions.koin}"
-    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
-    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+    implementation "androidx.appcompat:appcompat:$appCompat"
+    implementation "androidx.core:core-ktx:$corektx"
+    implementation "com.google.dagger:hilt-android:$daggerHilt"
+    kapt "com.google.dagger:hilt-compiler:$daggerHilt"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh"
 
-    testImplementation "junit:junit:${versions.junit}"
-    androidTestImplementation "androidx.test:runner:${versions.runner}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    testImplementation "junit:junit:${rootProject.ext.junit4}"
 }
